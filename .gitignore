@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/vscode,linux,windows,python,django
 # Edit at https://www.toptal.com/developers/gitignore?templates=vscode,linux,windows,python,django
 
+### instaclone example ###
+instaclone/
+
 ### Django ###
 *.log
 *.pot

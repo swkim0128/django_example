@@ -14,6 +14,7 @@ def user_path(instance, filename) :
     extension = filename.split('.')[-1]
 
     return 'accounts/{}/{}.{}'.format(instance.user.username, pid, extension)
+
 class Profile(models.Model) :
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     nickname = models.CharField('별명', max_length=20, unique=True)

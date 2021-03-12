@@ -1,2 +1,6 @@
 Django
 psycopg2
+pillow
+pilkit
+psycopg2-binary
+django-imagekit

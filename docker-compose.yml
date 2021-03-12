@@ -4,13 +4,14 @@ services:
     web:
         # build: .
         image: django_example:0.2
-        command: python manage.py runserver 0:8000
         ports:
             - "8000:8000"
         volumes:
             - .:/web
         depends_on:
             - db
+        command: bash -c "python manage.py migrate && python manage.py runserver 0:8000"
+
     db:
         image: postgres
         environment:

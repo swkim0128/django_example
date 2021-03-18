@@ -31,8 +31,15 @@
                             <div class="nick_name m_text">
                                 <!-- 포스트 저자 프로필의 닉네임 -->
                                 {{ post.author.profile.nickname }}
+                                {{ post.id }}
                             </div>
                             <div class="country s_text">Seoul, South Korea</div>
+                        </div>
+                        <div>
+                            <form action="{% url 'post:post_delete' post.pk %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" value="삭제">
+                            </form>
                         </div>
                     </div>
                     

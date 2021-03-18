@@ -12,7 +12,7 @@ def photo_path(instance, filename) :
     arr = [choice(string.ascii_letters) for _ in range(8)]
     pid = ''.join(arr)
     extension = filename.split('.')[-1]
-    return '{}/{}/{}/{}'.format(strftime('post/%Y/%m/%d/'), instance.author.username, pid, extension)
+    return '{}/{}/{}.{}'.format(strftime('post/%Y/%m/%d/'), instance.author.username, pid, extension)
 
 # Create your models here.
 class Post(models.Model) :

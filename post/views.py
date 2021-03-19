@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model, login
+from django.db.models.query import FlatValuesListIterable
 from django.http.response import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 
 import json
 from django.views.decorators.http import require_POST
@@ -14,6 +15,8 @@ from django.http import HttpResponse
 def post_list(request) :
     posts = Post.objects.all()
 
+    comment_form = CommentForm()
+
     if request.user.is_authenticated :
         username = request.user
         user = get_object_or_404(get_user_model(), username=username)
@@ -21,10 +24,12 @@ def post_list(request) :
         return render(request, 'post/post_list.html', {
             'user_profile': user_profile,
             'posts': posts,
+            'comment_form': comment_form,
         })
     else :
         return render(request, 'post/post_list.html', {
             'posts': posts,
+            'comment_form': comment_form,
         })
 
 @login_required
@@ -119,3 +124,42 @@ def post_bookmark(request) :
     context = {'bookmark_count': post.bookmark_count,
             'message': message}
     return HttpResponse(json.dumps(context), content_type="application/json")
+
+@login_required
+def comment_new(request) :
+    pk = request.POST.get('pk')     # Ajax를 통신하는 부분
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == 'POST' :
+        form = CommentForm(request.POST)
+
+        if form.is_valid() :
+            comment = form.save(commit=False)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+
+            return render(request, 'post/comment_new_ajax.html', {
+                'comment': comment,
+            })
+
+    return redirect("post:post_list")
+
+@login_required
+def comment_new_detail(request) :
+    pk = request.POST.get('pk')
+    post = get_object_or_404(Post, pk=pk)
+    
+    if request.method == 'POST' :
+        form = CommentForm(request.POST)
+
+        if form.is_valid() :
+            comment = form.save(commit=Flase)
+            comment.author = request.user
+            comment.post = post
+            comment.save()
+
+            return render(request, 'post/comment_new_detail_ajax.html', {
+                'comment': comment,
+            })
+
+    return redirect("post:post_list")

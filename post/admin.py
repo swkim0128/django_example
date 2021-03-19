@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib import admin
-from .models import Post, Like, Bookmark
+from .models import Post, Like, Bookmark, Comment
 
 # Register your models here.
 class PostForm(forms.ModelForm) :
@@ -18,6 +18,8 @@ class PostAdmin(admin.ModelAdmin) :
     list_display = ['id', 'author', 'nickname', 'content', 'created_at']
     list_display_links = ['author', 'nickname', 'content']
 
+    inlines = [LikeInLine, CommentInline]
+
     def nickname(request, post) :
         return post.author.profile.nickname
 
@@ -30,3 +32,11 @@ class LikeAdmin(admin.ModelAdmin) :
 class BookmarkAdmin(admin.ModelAdmin) :
     list_display = ['id', 'post', 'user', 'created_at']
     list_display_links = ['post', 'user']
+
+@admin.register(Comment)
+class ComentAdmin(admin.ModelAdmin) :
+    list_display = ['post', 'content', 'author', 'created_at']
+    list_display_links = ['post', 'content', 'author']
+
+class CommentInline(admin.TabularInline) :
+    model = Comment
